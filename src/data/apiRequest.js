@@ -5,6 +5,9 @@ export default function apiRequest({
 }) {
   const request = {
     method,
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
   };
 
   if (payload) {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getTeams } from '../data/actions';
+import { Link } from 'react-router-dom';
+import { getTeams, fetchTeam } from '../data/actions';
 
 class ListTeams extends Component {
   componentWillMount() {
@@ -8,13 +9,14 @@ class ListTeams extends Component {
   }
 
   render() {
-    const { teams, isLoading } = this.props;
+    const { teams, isLoading, fetchTeam } = this.props;
 
     if (isLoading) {
       return <div>Loading...</div>;
     }
 
-    return (
+    return [
+      <Link to="/create">Create new team</Link>,
       <table>
         <thead>
           <tr>
@@ -23,6 +25,7 @@ class ListTeams extends Component {
             <th>City</th>
             <th>Country</th>
             <th>Points</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -34,22 +37,26 @@ class ListTeams extends Component {
                 <td>{t.color}</td>
                 <td>{t.color}</td>
                 <td>{t.color}</td>
+                <td>
+                  <Link to={`/edit/${t.id}`} onClick={() => fetchTeam(t.id)}>Edit</Link>
+                </td>
               </tr>
             )
           })}
         </tbody>
-      </table>
-    );
+      </table>,
+    ];
   }
 }
 
-const mapStateToProps = (teamsState) => ({
+const mapStateToProps = ({ teamsState }) => ({
   teams: teamsState.teams,
   isLoading: teamsState.teamsLoading,
 });
 
 const mapDispatchToProps = {
   getTeams,
+  fetchTeam
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListTeams);
